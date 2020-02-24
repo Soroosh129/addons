@@ -23,7 +23,7 @@ PLATFORM="$(uname -s | tr 'A-Z' 'a-z')"
 DEFAULT_CUDA_VERISON="10.1"
 DEFAULT_CUDA_PATH="/usr/local/cuda"
 DEFAULT_CUDNN_VERSION="7"
-DEFAULT_CUDNN_PATH="/usr/lib/x86_64-linux-gnu"
+DEFAULT_CUDNN_PATH="/usr/lib/aarch64-linux-gnu"
 
 # Writes variables to bazelrc file
 function write_to_bazelrc() {
@@ -78,7 +78,7 @@ elif [[ -n "$1" ]]; then
 fi
 
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
-PYTHON_PATH=$(which python)
+PYTHON_PATH=$(which python3)
 REQUIRED_PKG=$(cat requirements.txt)
 
 if [[ ${BRANCH} == "master" ]]; then
@@ -89,13 +89,13 @@ fi
 echo ""
 echo "> TensorFlow Addons will link to the framework in a pre-installed TF pacakge..."
 echo "> Checking installed packages in ${PYTHON_PATH}"
-python build_deps/check_deps.py
+python3 build_deps/check_deps.py
 
 if [[ $? == 1 ]]; then
   read -r -p "Package ${REQUIRED_PKG} will be installed. Are You Sure? [y/n] " reply
   case $reply in
       [yY]*) echo "> Installing..."
-         python -m pip install $PIP_INSTALL_OPTS -r requirements.txt;;
+         python3 -m pip install $PIP_INSTALL_OPTS -r requirements.txt;;
       * ) echo "> Exiting..."; exit;;
   esac
 else
@@ -104,16 +104,16 @@ fi
 
 [[ -f .bazelrc ]] && rm .bazelrc
 
-TF_CFLAGS=($(python -c 'import logging; logging.disable(logging.WARNING);import tensorflow as tf; print(" ".join(tf.sysconfig.get_compile_flags()))'))
-TF_LFLAGS=($(python -c 'import logging; logging.disable(logging.WARNING);import tensorflow as tf; print(" ".join(tf.sysconfig.get_link_flags()))'))
-TF_CXX11_ABI_FLAG=($(python -c 'import logging; logging.disable(logging.WARNING);import tensorflow as tf; print(tf.sysconfig.CXX11_ABI_FLAG)'))
+TF_CFLAGS=($(python3 -c 'import logging; logging.disable(logging.WARNING);import tensorflow as tf; print(" ".join(tf.sysconfig.get_compile_flags()))'))
+TF_LFLAGS=($(python3 -c 'import logging; logging.disable(logging.WARNING);import tensorflow as tf; print(" ".join(tf.sysconfig.get_link_flags()))'))
+TF_CXX11_ABI_FLAG=($(python3 -c 'import logging; logging.disable(logging.WARNING);import tensorflow as tf; print(tf.sysconfig.CXX11_ABI_FLAG)'))
 
 TF_SHARED_LIBRARY_NAME=$(generate_shared_lib_name ${TF_LFLAGS[1]})
 TF_HEADER_DIR=${TF_CFLAGS:2}
 
 # OS Specific parsing
 if is_windows; then
-  TF_SHARED_LIBRARY_DIR=${TF_CFLAGS:2:-7}"python"
+  TF_SHARED_LIBRARY_DIR=${TF_CFLAGS:2:-7}"python3"
   TF_SHARED_LIBRARY_DIR=${TF_SHARED_LIBRARY_DIR//\\//}
 
   TF_SHARED_LIBRARY_NAME=${TF_SHARED_LIBRARY_NAME//\\//}

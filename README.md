@@ -2,6 +2,8 @@
   <img src="https://github.com/tensorflow/community/blob/master/sigs/logos/SIGAddons.png" width="60%"><br><br>
 </div>
 
+--- This fork includes support for NVIDIA Jetson AGX. Please use the r0.7 branch ---
+
 -----------------
 
 [![PyPI Status Badge](https://badge.fury.io/py/tensorflow-addons.svg)](https://pypi.org/project/tensorflow-addons/)

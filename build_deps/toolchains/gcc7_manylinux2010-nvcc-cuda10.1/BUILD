@@ -25,6 +25,7 @@ cc_toolchain_suite(
     name = "toolchain",
     toolchains = {
         "local|compiler": ":cc-compiler-local",
+        "aarch64": ":cc-compiler-local",
         "darwin|compiler": ":cc-compiler-darwin",
         "k8": ":cc-compiler-local",
         "darwin": ":cc-compiler-darwin",

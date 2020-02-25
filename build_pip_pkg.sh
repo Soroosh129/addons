@@ -72,9 +72,9 @@ function main() {
 
   if [[ -z ${BUILD_FLAG} ]]; then
     # Windows has issues with locking library files for deletion so do not fail here
-    ${PYTHON_VERSION:=python} setup.py bdist_wheel || true
+    ${PYTHON_VERSION:=python3} setup.py bdist_wheel || true
   else
-    ${PYTHON_VERSION:=python} setup.py bdist_wheel "${2}" || true
+    ${PYTHON_VERSION:=python3} setup.py bdist_wheel "${2}" || true
   fi
 
   cp dist/*.whl "${DEST}"
